@@ -7,11 +7,10 @@ public:
 
     StateBlock state;
     unsigned char roundkeys[16*11];
-    StateBlock output;
     unsigned char key[16];
 
     //encrypt block
-    void run(unsigned char plaintext_in[16], unsigned char key_in[16], unsigned char dout[16]){
+    void run(unsigned char plaintext_in[16], unsigned char key_in[16], unsigned char ciphertext_out[16]){
         // input
         for(int i=0;i<4;i++){
             for(int j=0;j<4;j++){
@@ -46,7 +45,7 @@ public:
         // output
         for(int i=0;i<4;i++){
             for(int j=0;j<4;j++){
-                dout[i*4+j] = state.arr[j][i];
+                ciphertext_out[i*4+j] = state.arr[j][i];
             }
         }
 
