@@ -31,12 +31,12 @@ public:
                 for(int j=0;j<4;j++){
                     printf("%02x",state.arr[j][i]);
                 }
-            }*/
+            }
+            printf("\n");*/
             SubBytes(state);
             state = ShiftRows(state);
             state = MixColumns(state);
             AddRoundKey(state, roundkeys+(r<<4));
-            //printf("\n");
         }
         SubBytes(state);
         state = ShiftRows(state);

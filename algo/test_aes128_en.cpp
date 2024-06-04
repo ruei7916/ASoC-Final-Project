@@ -50,7 +50,7 @@ int main(){
     }
     all_pass = true;
     // repeats test for 128 times
-    for(int i=0;i<128;i++){
+    for(int i=0;i<=128;i++){
         fgets(line, 38, file);
         // read in key
         fgets(line, 38, file);
@@ -71,15 +71,15 @@ int main(){
             result[i] = true;
         }else{
             result[i] = false;
-            printf("Pattern %d\tfailed:\n", i+1);
+            printf("Pattern %d\tfailed:\n", i);
             printf("  Expect = ");
             for(int j=0;j<16;j++){
-                printf("%02x", *(c_bin+j));
+                printf("%02X", *(c_bin+j));
             }
             printf("\n");
             printf("  Output = ");
             for(int j=0;j<16;j++){
-                printf("%02x", *(out_bin+j));
+                printf("%02X", *(out_bin+j));
             }
             printf("\n==\n");
             all_pass = false;
