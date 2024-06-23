@@ -95,15 +95,6 @@
 # Check file required for this script exists
 proc checkRequiredFiles { origin_dir} {
   set status true
-  set files [list \
- "[file normalize "$origin_dir/vvd_caravel_fpga/vvd_caravel_fpga.srcs/utils_1/imports/synth_1/design_1_wrapper.dcp"]"\
-  ]
-  foreach ifile $files {
-    if { ![file isfile $ifile] } {
-      puts " Could not find local file $ifile "
-      set status false
-    }
-  }
 
   set files [list \
  "[file normalize "$origin_dir/vvd_srcs/caravel_soc/rtl/user/logic_analyzer/rtl/LogicAnalyzer.v"]"\
@@ -476,21 +467,11 @@ set_property -name "top_lib" -value "xil_defaultlib" -objects $obj
 # Set 'utils_1' fileset object
 set obj [get_filesets utils_1]
 # Import local files from the original project
-set files [list \
- [file normalize "${origin_dir}/vvd_caravel_fpga/vvd_caravel_fpga.srcs/utils_1/imports/synth_1/design_1_wrapper.dcp" ]\
-]
-set imported_files ""
-foreach f $files {
-  lappend imported_files [import_files -fileset utils_1 $f]
-}
 
 # Set 'utils_1' fileset file properties for remote files
 # None
 
 # Set 'utils_1' fileset file properties for local files
-set file "synth_1/design_1_wrapper.dcp"
-set file_obj [get_files -of_objects [get_filesets utils_1] [list "*$file"]]
-set_property -name "netlist_only" -value "0" -objects $file_obj
 
 
 # Set 'utils_1' fileset properties
@@ -1700,7 +1681,6 @@ if { $obj != "" } {
 
 }
 set obj [get_runs synth_1]
-set_property -name "incremental_checkpoint" -value "$proj_dir/vvd_caravel_fpga.srcs/utils_1/imports/synth_1/design_1_wrapper.dcp" -objects $obj
 set_property -name "auto_incremental_checkpoint" -value "1" -objects $obj
 set_property -name "strategy" -value "Vivado Synthesis Defaults" -objects $obj
 
@@ -1978,3 +1958,17 @@ move_dashboard_gadget -name {drc_1} -row 2 -col 0
 move_dashboard_gadget -name {timing_1} -row 0 -col 1
 move_dashboard_gadget -name {utilization_2} -row 1 -col 1
 move_dashboard_gadget -name {methodology_1} -row 2 -col 1
+
+
+# added for generate bitstream 
+update_compile_order -fileset sources_1
+launch_runs impl_1 -to_step write_bitstream -job 10
+wait_on_run impl_1
+
+# Open implemented design before executing below commands.
+open_run impl_1
+
+# output timing summary
+report_timing_summary -file timing_report.log
+
+exit

@@ -20,7 +20,7 @@ rm -f vivado*.log
 
 # ----- Re-build vivado project -----#
 
-vivado -source vvd_caravel_fpga_fsic.tcl -mode tcl
+vivado -source vvd_caravel_fpga.tcl -mode tcl
 
 FILE="vivado.log"
 STRING="CRITICAL WARNING: [Timing 38-282]"
