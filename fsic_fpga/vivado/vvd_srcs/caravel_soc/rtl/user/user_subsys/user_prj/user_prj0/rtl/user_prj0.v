@@ -87,6 +87,26 @@ assign ss_tready = pt_in_rdy;
 assign ct_out_rdy = (sm_cnt==2'b11)?sm_tready:1'b0;
 assign sm_tvalid = ct_out_vld;
 
+//===================for profiling========================
+reg [63:0] clk_cnt;
+reg clk_cnt_state;
+always@(posedge axi_clk or negedge axi_reset_n) begin
+  if(~axi_reset_n | reg_rst)begin
+    clk_cnt_state <= 0;
+  end else begin
+    if(ss_tvalid&ss_tready) clk_cnt_state <= 1;
+    else if (sm_tlast) clk_cnt_state <= 0;
+  end
+end
+always@(posedge axi_clk or negedge axi_reset_n) begin
+  if(~axi_reset_n | reg_rst)begin
+    clk_cnt <= 0;
+  end else begin
+    if(clk_cnt_state) clk_cnt <= clk_cnt + 1;
+  end
+end
+//=========================================================
+
 always @(posedge axi_clk or negedge axi_reset_n) begin
   if(~axi_reset_n | reg_rst)begin
     ss_cnt <= 0;
@@ -127,6 +147,9 @@ always @(*) begin
     10'h005: rdata = key1;
     10'h006: rdata = key2;
     10'h007: rdata = key3;
+    // for profiling
+    10'h008: rdata = clk_cnt[31:0];
+    10'h009: rdata = clk_cnt[63:32];
   endcase
 end
 
